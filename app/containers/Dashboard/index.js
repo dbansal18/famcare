@@ -28,11 +28,17 @@ export function Dashboard() {
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
   useEffect(() => {
+    console.log('1');
+    
     navigator.geolocation.getCurrentPosition((pos) => {
       setLat(pos.coords.latitude);
       setLon(pos.coords.longitude)
       console.log('hhh', lat, lon)
     })
+    // return function cleanup() {
+    //   setLat(null);
+    //   setLon(null);
+    // };
   })
   
   return (
@@ -89,6 +95,5 @@ const withConnect = connect(
 );
 
 export default compose(
-  withConnect,
-  memo,
+  withConnect
 )(Dashboard);

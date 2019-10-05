@@ -49,7 +49,6 @@ export function LoginPage({ authCode, responseGoogle, onReceivingAuthCode }) {
               clientId="601951843890-jbcqv1r0pdm4pkqkp38qnpf48aphsqra.apps.googleusercontent.com"
               buttonText="Sign in with Google"
               scope="profile"
-              responseType="code"
               onSuccess={responseGoogle}
               cookiePolicy="single_host_origin"
               className="google-btn"
@@ -75,7 +74,7 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     responseGoogle: response => {
-      dispatch(getAuthCode(response.code));
+      dispatch(getAuthCode(response.Zi.id_token));
     },
     onReceivingAuthCode: authCode => {
       dispatch(getUserData(authCode));

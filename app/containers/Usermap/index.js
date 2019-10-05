@@ -26,10 +26,14 @@ export function Usermap() {
     lat: 59.95,
     lng: 30.33
   });
+  var id = 0;
   
   useLayoutEffect(() => {
+    console.log('2');
+    
     if ("geolocation" in navigator) {
-      var id = 0;
+      console.log('3');
+      
       var options = {
         enableHighAccuracy: true,
         maximumAge: 0
@@ -50,7 +54,10 @@ export function Usermap() {
     } else {
       alert('Geolocaton not supported');
     }
-  }, []);
+    // return function cleanup() {
+    //   setCenter(null)
+    // }
+  });
 
   const [zoom, setZoom] = useState(11);
 

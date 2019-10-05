@@ -6,7 +6,9 @@ import request from '../../utils/request';
 import { API } from '../../utils/constants';
 
 function* getLoginData(authCode) {
-  const requestURL = `${API}/login`;
+  console.log('authcoe', authCode);
+  // const requestURL = 'http://localhost:8000/user/signin'
+  const requestURL = `${API}/user/signin`;
   const headers = {
     method: 'POST',
 
@@ -16,24 +18,8 @@ function* getLoginData(authCode) {
   };
 
   try {
-    // const userDetails = yield call(request, requestURL, headers);
-    const userDetailss = {
-      email: "sanket.sonawane@afourtech.com",
-      name: "Sanket Sonawane",
-      userID: "112474066475912497382",
-      hostedDomain: "afourtech.com",
-      imageURL: null,
-      cardId: "05009125BD0",
-      employeeID: "AFT00578",
-      contactNumber: "7219115143",
-      authKey: "4/bwE0pO-IdHOZec3AcRldXBd785iAj8lGN_Gs8ZJZ7ZCBYrkfk4ccOrAKXM_0wzV3Y_VGDt6g9CL1elC2w-vbdZI",
-      userGroups: [
-       "afour-pune-campus@afourtech.com",
-       "designanddevelopment@afourtech.com",
-       "reactgurus@afourtech.com"
-      ]
-     }
-    yield put(userDataLoaded(userDetailss));
+    const userDetails = yield call(request, requestURL, headers);
+    yield put(userDataLoaded(userDetails));
     yield put(push('/dashboard'));
   } catch (error) {
     // eslint-disable-next-line no-console
