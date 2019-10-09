@@ -20,6 +20,7 @@ import PrivateRoute from '../../PrivateRoute';
 import reducer from './reducer';
 
 import HomePage from 'containers/HomePage/Loadable';
+import Navigation from 'containers/Navigation/Loadable';
 import Dashboard from 'containers/Dashboard/Loadable';
 import LoginPage from 'containers/LoginPage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
@@ -49,7 +50,7 @@ function App({ isAuthenticated, apiResponse }) {
 
   const DefaultContainer = () => (
     <React.Fragment>
-      {/* <Navigation /> */}
+      <Navigation />
       {apiResponse && apiResponse.status !== 'inProgress' ? (
         <Notification
           infoMessage={apiResponse.message}

@@ -11,25 +11,33 @@ import { Helmet } from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import { Link } from 'react-router-dom';
+import { LinearProgress, Card, CardHeader, Avatar, IconButton } from '@material-ui/core';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
+import NewGroup from 'components/NewGroup/Loadable';
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
-import makeSelectDashboard from './selectors';
+import { makeSelectUser } from './../App/selectors';
+import {
+  makeSelectLoading,
+  makeSelectGroupList,
+} from './selectors';
 import reducer from './reducer';
 import saga from './saga';
+import { getGroupList, postGroup } from './actions';
 
 import './styles.scss';
 import Logo from './images/logo.png';
 
-export function Dashboard() {
+export function Dashboard({ loading, groupList, getGroups, loggedUser, addNewGroup }) {
   useInjectReducer({ key: 'dashboard', reducer });
   useInjectSaga({ key: 'dashboard', saga });
 
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
+  const [userGroups, setUserGroups] = useState([]);
+
   useEffect(() => {
-    console.log('1');
-    
     navigator.geolocation.getCurrentPosition((pos) => {
       setLat(pos.coords.latitude);
       setLon(pos.coords.longitude)
@@ -39,23 +47,48 @@ export function Dashboard() {
     //   setLat(null);
     //   setLon(null);
     // };
-  })
-  
+  }, [lat, lon]);
+
+  useEffect(() => {
+    getGroups();
+    
+  }, []);
+
+  useEffect(() => {
+    mapUserGroups();
+  }, [groupList]);
+
+  const mapUserGroups = () => {
+    const tempUserGroups = [];
+    groupList.forEach(group => {
+      group.users.forEach(user => {
+        if(user.id === loggedUser._id) tempUserGroups.push(group);
+      })
+    });
+    setUserGroups(tempUserGroups);
+  };
+
   return (
     <div>
       <Helmet>
         <title>Dashboard</title>
         <meta name="description" content="Description of Dashboard" />
       </Helmet>
+      { loading  ? <LinearProgress /> : ''}
       <div className="content-area area-height">
         <div className="page-404">
           <div className="ht-100 content">
-            <h1 className="main-heading">
+            {/* <h1 className="main-heading">
               <div className="logo-center">
                 <img className="logo-img" src={Logo} alt="JMITLogo" />
               </div>
-            </h1>
-            <h2>Dashboard page is under construction.</h2>
+            </h1> */}
+            <h2>Add New Group {groupList.length}  {userGroups.length}
+              <NewGroup
+                groupsList={groupList}
+                addNewGroup={addNewGroup}
+              />
+            </h2>
             <Link
               to={{
                 pathname: '/mapp',
@@ -68,6 +101,27 @@ export function Dashboard() {
             }
             <div>{lat}</div>
             <div>{lon}</div>
+            {userGroups && userGroups.map(group => 
+              (
+                <div key={group._id} className="groupcard">
+                  <Card>
+                    <CardHeader
+                      avatar={
+                        <Avatar aria-label="recipe">
+                          R
+                        </Avatar>
+                      }
+                      action={
+                        <IconButton aria-label="settings">
+                          <MoreVertIcon />
+                        </IconButton>
+                      }
+                      title={group.name}
+                    />
+                  </Card>
+                </div>
+              )
+            )}
           </div>
         </div>
       </div>
@@ -76,16 +130,24 @@ export function Dashboard() {
 }
 
 Dashboard.propTypes = {
-  dispatch: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
+  groupList: PropTypes.array,
+  getGroups: PropTypes.func,
+  loggedUser: PropTypes.object,
+  addNewGroup: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
-  dashboard: makeSelectDashboard(),
+  // dashboard: makeSelectDashboard(),
+  loading: makeSelectLoading(),
+  groupList: makeSelectGroupList(),
+  loggedUser: makeSelectUser(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
-    dispatch,
+    getGroups: () => dispatch(getGroupList()),
+    addNewGroup: group => dispatch(postGroup(group)),
   };
 }
 
@@ -95,5 +157,6 @@ const withConnect = connect(
 );
 
 export default compose(
-  withConnect
+  withConnect,
+  memo,
 )(Dashboard);

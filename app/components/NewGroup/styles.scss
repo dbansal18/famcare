@@ -1,0 +1,93 @@
+.add-new-wrapper {
+    height: 308px;
+    width: 305px;
+    background-color: #ffffff;
+    padding: 32px;
+  
+    .title {
+      color: #2a2f33;
+      font-family: 'Roboto';
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 20px;
+      margin-top: 0px; 
+    }
+    .sub-title {
+      color: #2a2f33;
+      font-family: 'Roboto';
+      font-size: 12px !important;
+      font-weight: 500 !important;
+      line-height: 20px;
+      margin-top: 25px;
+      margin-bottom: 0px;
+    }
+    .tab-btn-l {
+      font-family: 'Roboto';
+      font-size: 12px;
+      text-align: center;
+      border-radius: 4px 0px 0px 4px;
+      width: 112px;
+      background-color: #428fd6;
+      text-transform: none;
+    }
+    .tab-btn-r {
+      color: #49587d;
+      font-family: Roboto;
+      font-size: 12px;
+      text-align: center;
+      border-radius: 0px 4px 4px 0px;
+      width: 112px;
+      text-transform: none;
+    }
+    .proj-select {
+        width: 225px;
+    }
+    .select-box {
+      height: 33px;
+      select {
+          font-size: 12px;
+          background: none !important;
+      }
+    }
+    .action-wrapper {
+      position: relative;
+      bottom: -20px;
+      // position: fixed;
+      // bottom: 15px; 
+    }
+    .act-btn-l {
+      color: #E54555;
+      border-color: #E54555;
+      text-transform: none;
+      margin-right: 25px;
+      border-radius: 40px;
+      width: 100px !important;
+      font-size: 12px !important;
+    }
+    .act-btn-r {
+      text-transform: none;
+      border-radius: 40px;
+      width: 100px !important;
+      // background-color: #428fd6;
+      font-size: 12px !important;
+    }
+    .grouplogosection {
+      display: flex;
+      align-items: center;
+      padding-top: 20px;
+      
+      .grouplogo {
+        height: 40px;
+        width: 40px;
+        margin-right: 12px;
+        border-radius: 40px;
+      }
+
+      .changelogo {
+        cursor: pointer;
+        color: #428FD6;
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+  }

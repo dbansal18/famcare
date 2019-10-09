@@ -18,5 +18,22 @@ const selectDashboardDomain = state => state.dashboard || initialState;
 const makeSelectDashboard = () =>
   createSelector(selectDashboardDomain, substate => substate);
 
+const makeSelectLoading = () =>
+  createSelector(
+    selectDashboardDomain,
+    substate => substate.loading,
+  );
+
+const makeSelectGroupList = () =>
+  createSelector(
+    selectDashboardDomain,
+    substate => substate.groupList,
+  );
+
 export default makeSelectDashboard;
-export { selectDashboardDomain };
+
+export { 
+  selectDashboardDomain,
+  makeSelectLoading,
+  makeSelectGroupList, 
+};

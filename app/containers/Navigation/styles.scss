@@ -1,0 +1,128 @@
+.sidebar {
+    width: 389px;
+  }
+  
+  .sidebar-app {
+    font-family: 'Roboto';
+    font-size: 16px;
+    line-height: 19px;
+  }
+  
+  .sidebar-currentlocation-app {
+    color: #428fd6 !important;
+    font-family: 'Roboto';
+    font-size: 16px;
+    line-height: 19px;
+  }
+  
+  .header-title {
+    flex-grow: 1;
+    display: flex;
+  }
+  
+  .profile-section {
+    padding: 30px;
+    display: flex;
+  
+    .edit-profile {
+      color: #428fd6;
+      font-family: 'Roboto';
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 14px;
+      margin-top: 6px;
+    }
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      color: #428fd6;
+      cursor: pointer;
+    }
+    .avatar {
+      height: 45px;
+      width: 45px;
+      margin-right: 15px;
+      border-radius: 40px;
+    }
+  }
+  
+  .user-name {
+    color: #2a2f33;
+    font-family: 'Roboto';
+    font-size: 22px;
+    line-height: 25px;
+    font-weight: 400;
+    margin: 0;
+  }
+  
+  .nav-wrapper {
+    .page-title {
+      color: #9eacb9;
+      font-family: 'Roboto';
+      font-size: 12px;
+      font-weight: bold;
+      line-height: 14px;
+      margin-top: 0px;
+      margin-bottom: 7px;
+    }
+    .breadcrumbs {
+      color: #2a2f33;
+      font-family: 'Roboto';
+      font-size: 16px;
+      line-height: 19px;
+      margin: 0;
+      font-weight: 400;
+      text-decoration: none;
+    }
+  }
+  
+  .main-menu {
+    margin-right: 15px !important;
+  }
+  
+  .header-logo {
+    margin-right: 24px;
+    height: 40px;
+  }
+  
+  .app-name {
+    color: #2a2f33;
+    font-family: 'Roboto';
+    font-size: 16px;
+    line-height: 19px;
+    text-decoration: none;
+    cursor: pointer;
+    .icon-cl {
+      color: #2a2f33;
+    }
+    &:hover {
+      color: #428fd6 !important;
+      .icon-cl {
+        color: #428fd6 !important;
+      }
+    }
+    .list-item {
+      background: none !important;
+    }
+  }
+  
+  .header-section {
+    height: 80px;
+    header {
+      background-color: #ffffff;
+      box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.12);
+    }
+    .nav-ht {
+      min-height: 80px !important;
+    }
+  }
+  
+  .p-20 {
+    padding: 20px !important;
+  }
+  
+  .w-350 {
+    width: 350px;
+  }
+  

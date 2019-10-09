@@ -1,0 +1,5 @@
+.MuiLinearProgress-root {
+    position: fixed !important;
+    z-index: 99;
+    width: -webkit-fill-available;
+}
