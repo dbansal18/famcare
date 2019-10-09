@@ -6,6 +6,7 @@ const OfflinePlugin = require('offline-plugin');
 const { HashedModuleIdsPlugin } = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = require('./webpack.base.babel')({
   mode: 'production',
@@ -67,6 +68,7 @@ module.exports = require('./webpack.base.babel')({
 
   plugins: [
     // Minify and optimize the index.html
+    new Dotenv(),
     new HtmlWebpackPlugin({
       template: 'app/index.html',
       minify: {
