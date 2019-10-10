@@ -74,9 +74,9 @@ function InviteUser({ usersList, selectedGroup, addNewUser }) {
         }}
       >
         <div className="add-new-wrapper">
-          <h2 className="title">Add New Group</h2>
+          <h2 className="title">Add User</h2>
             <div>
-              <h3 className="sub-title">Enter Croup Name</h3>
+              <h3 className="sub-title">Enter User Email</h3>
               <TextField
                 id="outlined-name"
                 placeholder="Group Name"
@@ -89,7 +89,7 @@ function InviteUser({ usersList, selectedGroup, addNewUser }) {
               />
               {emailValid && (
                 <FormHelperText id="component-error-text" className="error">
-                  User does not exists
+                  User does not exists or already in group
                 </FormHelperText>
               )}
             </div>

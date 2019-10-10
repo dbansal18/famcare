@@ -115,7 +115,7 @@ function NewGroup({ groupsList, addNewGroup }) {
                   <Typography className="changelogo">Change Logo</Typography>
                 </label>
               </div>
-              <h3 className="sub-title">Enter Croup Name</h3>
+              <h3 className="sub-title">Enter Group Name</h3>
               <TextField
                 id="outlined-name"
                 placeholder="Group Name"
