@@ -95,7 +95,7 @@ export function Dashboard({ loading, userList, groupList, getUsers, getGroups, l
             <h2>Add New Group {groupList.length}  {userGroups.length}
               <NewGroup
                 groupsList={groupList}
-                addNewGroup={inviteUserToGroup}
+                addNewGroup={addNewGroup}
               />
             </h2>
             <Link
