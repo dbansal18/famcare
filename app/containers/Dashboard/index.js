@@ -15,21 +15,23 @@ import { LinearProgress, Card, CardHeader, Avatar, IconButton } from '@material-
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import NewGroup from 'components/NewGroup/Loadable';
+import InviteUser from 'components/InviteUser/Loadable';
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
 import { makeSelectUser } from './../App/selectors';
 import {
   makeSelectLoading,
+  makeSelectUserList,
   makeSelectGroupList,
 } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
-import { getGroupList, postGroup } from './actions';
+import { getUserList, getGroupList, postGroup, inviteUser } from './actions';
 
 import './styles.scss';
 import Logo from './images/logo.png';
 
-export function Dashboard({ loading, groupList, getGroups, loggedUser, addNewGroup }) {
+export function Dashboard({ loading, userList, groupList, getUsers, getGroups, loggedUser, addNewGroup, inviteUserToGroup }) {
   useInjectReducer({ key: 'dashboard', reducer });
   useInjectSaga({ key: 'dashboard', saga });
 
@@ -51,7 +53,7 @@ export function Dashboard({ loading, groupList, getGroups, loggedUser, addNewGro
 
   useEffect(() => {
     getGroups();
-    
+    getUsers();
   }, []);
 
   useEffect(() => {
@@ -67,6 +69,13 @@ export function Dashboard({ loading, groupList, getGroups, loggedUser, addNewGro
     });
     setUserGroups(tempUserGroups);
   };
+
+  function usersNotInGroup(groupUsers) {
+    var tempUsers =  userList.filter(user => {
+      if(!groupUsers.find(res => (res.id === user._id))) return user;
+    });
+    return tempUsers;
+  }
 
   return (
     <div>
@@ -86,7 +95,7 @@ export function Dashboard({ loading, groupList, getGroups, loggedUser, addNewGro
             <h2>Add New Group {groupList.length}  {userGroups.length}
               <NewGroup
                 groupsList={groupList}
-                addNewGroup={addNewGroup}
+                addNewGroup={inviteUserToGroup}
               />
             </h2>
             <Link
@@ -112,9 +121,11 @@ export function Dashboard({ loading, groupList, getGroups, loggedUser, addNewGro
                         </Avatar>
                       }
                       action={
-                        <IconButton aria-label="settings">
-                          <MoreVertIcon />
-                        </IconButton>
+                        group.admin === loggedUser._id ? (<InviteUser
+                            usersList={usersNotInGroup(group.users)}
+                            selectedGroup={group._id}
+                            addNewUser={inviteUserToGroup}
+                          />) : ''
                       }
                       title={group.name}
                     />
@@ -131,23 +142,29 @@ export function Dashboard({ loading, groupList, getGroups, loggedUser, addNewGro
 
 Dashboard.propTypes = {
   loading: PropTypes.bool,
+  userList: PropTypes.array,
   groupList: PropTypes.array,
+  getUsers: PropTypes.func,
   getGroups: PropTypes.func,
   loggedUser: PropTypes.object,
   addNewGroup: PropTypes.func,
+  inviteUserToGroup: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
   // dashboard: makeSelectDashboard(),
   loading: makeSelectLoading(),
+  userList: makeSelectUserList(),
   groupList: makeSelectGroupList(),
   loggedUser: makeSelectUser(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
+    getUsers: () => dispatch(getUserList()),
     getGroups: () => dispatch(getGroupList()),
     addNewGroup: group => dispatch(postGroup(group)),
+    inviteUserToGroup: invite => dispatch(inviteUser(invite)),
   };
 }
 

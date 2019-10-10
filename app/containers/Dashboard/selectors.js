@@ -24,6 +24,12 @@ const makeSelectLoading = () =>
     substate => substate.loading,
   );
 
+const makeSelectUserList = () =>
+  createSelector(
+    selectDashboardDomain,
+    substate => substate.userList,
+  );
+
 const makeSelectGroupList = () =>
   createSelector(
     selectDashboardDomain,
@@ -35,5 +41,6 @@ export default makeSelectDashboard;
 export { 
   selectDashboardDomain,
   makeSelectLoading,
+  makeSelectUserList,
   makeSelectGroupList, 
 };
