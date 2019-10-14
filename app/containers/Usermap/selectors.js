@@ -18,5 +18,8 @@ const selectUsermapDomain = state => state.usermap || initialState;
 const makeSelectUsermap = () =>
   createSelector(selectUsermapDomain, substate => substate);
 
-export default makeSelectUsermap;
-export { selectUsermapDomain };
+const makeSelectLocation = () =>
+  createSelector(selectUsermapDomain, substate => substate.location);
+
+// export default makeSelectUsermap;
+export { selectUsermapDomain, makeSelectLocation };

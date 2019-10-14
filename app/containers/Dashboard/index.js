@@ -16,7 +16,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import NewGroup from 'components/NewGroup/Loadable';
 import InviteUser from 'components/InviteUser/Loadable';
-import GroupInfo from 'components/GroupInfo/Loadable'
+import GroupInfo from 'components/GroupInfo/Loadable';
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
 import { makeSelectUser } from './../App/selectors';

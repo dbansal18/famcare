@@ -7,18 +7,18 @@
 import React, { memo, useState, useEffect, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Helmet } from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-import GoogleMap from 'google-map-react';
 
+import GoogleMap from 'components/GoogleMap/Loadable';
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
-import makeSelectUsermap from './selectors';
+import { makeSelectLocation} from './selectors';
 import reducer from './reducer';
 import saga from './saga';
+import { fetchLocation, fetchLocationSuccess } from './actions';
 
-export function Usermap() {
+export function Usermap({getUserLocation, location, putLocation}) {
   useInjectReducer({ key: 'usermap', reducer });
   useInjectSaga({ key: 'usermap', saga });
 
@@ -28,36 +28,20 @@ export function Usermap() {
   });
   var id = 0;
   
-  useLayoutEffect(() => {
-    console.log('2');
-    
-    if ("geolocation" in navigator) {
-      console.log('3');
-      
-      var options = {
-        enableHighAccuracy: true,
-        maximumAge: 0
-      };
+ 
+  useEffect(() => {
+    // getUserLocation();
+    fetchLocation();
+  }, [location])
 
-      function success(pos) {
-        var crd = pos.coords;
+  const fetchLocation = () => {
+    navigator.geolocation.watchPosition(
+      pos => {
         const location = {lat: pos.coords.latitude, lng: pos.coords.longitude};
-        setCenter(location);
+        putLocation(location);
       }
-
-      function error(err) {
-        console.warn('ERROR(' + err.code + '): ' + err.message);
-        alert(err.message);
-      }
-
-      id = navigator.geolocation.watchPosition(success, error, options);
-    } else {
-      alert('Geolocaton not supported');
-    }
-    // return function cleanup() {
-    //   setCenter(null)
-    // }
-  });
+    );
+  }
 
   const [zoom, setZoom] = useState(11);
 
@@ -72,43 +56,26 @@ export function Usermap() {
     </div>;
 
   return (
-    <div style={{ height: '100vh', width: '100%' }}>
-            <GoogleMap
-              bootstrapURLKeys={{ key: 'AIzaSyDiWFGyuSGusJbWlooWWyEACxTuOsomDJs' }}
-              defaultCenter={center}
-              defaultZoom={zoom}
-            >
-              <AnyReactComponent
-                lat={center.lat}
-                lng={center.lng}
-                text="MY1"
-              />
-              <AnyReactComponent
-                lat={59.955413}
-                lng={30.337844}
-                text="1"
-              />
-              <AnyReactComponent
-                lat={59.965413}
-                lng={30.337844}
-                text="2"
-              />
-            </GoogleMap>
-    </div>
+    <GoogleMap userLocation={location}/>
   );
 }
 
 Usermap.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  getUserLocation: PropTypes.func,
+  location: PropTypes.object,
+  putLocation: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
-  usermap: makeSelectUsermap(),
+  location: makeSelectLocation(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
+    getUserLocation: () => dispatch(fetchLocation()),
+    putLocation: (location) => dispatch(fetchLocationSuccess(location)),
   };
 }
 
