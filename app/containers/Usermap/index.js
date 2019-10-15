@@ -32,7 +32,7 @@ export function Usermap({getUserLocation, location, putLocation}) {
   useEffect(() => {
     // getUserLocation();
     fetchLocation();
-  }, [location])
+  }, [])
 
   const fetchLocation = () => {
     navigator.geolocation.watchPosition(

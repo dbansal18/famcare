@@ -82,7 +82,7 @@ function GoogleMap({userLocation}) {
     var mapCanvas = document.getElementById("mapsCanvas");
     var mapOptions = {
       center: {lat: 19.0587757, lng: 76.085601},
-      zoom: 10
+      zoom: 12
     };
     var map = new google.maps.Map(mapCanvas, mapOptions);
     var marker = new google.maps.Marker({position: userLocation, map: map});
