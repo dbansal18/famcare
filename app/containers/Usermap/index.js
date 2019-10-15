@@ -22,87 +22,11 @@ export function Usermap({getUserLocation, location, putLocation}) {
   useInjectReducer({ key: 'usermap', reducer });
   useInjectSaga({ key: 'usermap', saga });
 
-  // const [center, setCenter] = useState({
-  //   lat: 59.95,
-  //   lng: 30.33
-  // });
-  // var id = 0;
-
-  // Hook
-  let cachedScripts = [];
-  function useScript(src) {
-    // Keeping track of script loaded and error state
-    const [state, setState] = useState({
-      loaded: false,
-      error: false
-    });
-
-    useEffect(
-      () => {
-        // If cachedScripts array already includes src that means another instance ...
-        // ... of this hook already loaded this script, so no need to load again.
-        if (cachedScripts.includes(src)) {
-          setState({
-            loaded: true,
-            error: false
-          });
-        } else {
-          cachedScripts.push(src);
-
-          // Create script
-          let script = document.createElement('script');
-          script.src = src;
-          script.async = true;
-
-          // Script event listener callbacks for load and error
-          const onScriptLoad = () => {
-            setState({
-              loaded: true,
-              error: false
-            });
-          };
-
-          const onScriptError = () => {
-            // Remove from cachedScripts we can try loading again
-            const index = cachedScripts.indexOf(src);
-            if (index >= 0) cachedScripts.splice(index, 1);
-            script.remove();
-
-            setState({
-              loaded: true,
-              error: true
-            });
-          };
-
-          script.addEventListener('load', onScriptLoad);
-          script.addEventListener('error', onScriptError);
-
-          // Add script to document body
-          document.body.appendChild(script);
-
-          // Remove event listeners on cleanup
-          return () => {
-            script.removeEventListener('load', onScriptLoad);
-            script.removeEventListener('error', onScriptError);
-          };
-        }
-      },
-      [src] // Only re-run effect if script src changes
-    );
-
-    return [state.loaded, state.error];
-  }
-  
- 
-  const [loaded, error] = useScript(
-    'https://maps.googleapis.com/maps/api/js?key=AIzaSyDiWFGyuSGusJbWlooWWyEACxTuOsomDJs&callback=initMap'
-  );
-
   useEffect(() => {
     // getUserLocation();
     fetchLocation();
-    loaded ? myMap() : ''
-  }, [loaded])
+    myMap();
+  }, [location])
 
   const fetchLocation = () => {
     navigator.geolocation.watchPosition(
@@ -110,10 +34,20 @@ export function Usermap({getUserLocation, location, putLocation}) {
         const location = {lat: pos.coords.latitude, lng: pos.coords.longitude};
         putLocation(location);
       }
-    );
+    )
   }
 
+  // const [mapCanvas, setMapCanvas] = useState(document.getElementById("mapsCanvas"));
+  // const mapsCanvas = useRef(null)
+  // const [mapOptions, setMapOptions] = useState({
+  //   center: {lat: 19.0587757, lng: 76.085601},
+  //   zoom: 12
+  // });
+  // const [map, setMap] = useState()
+  // const [marker, setMarker] = useState(new google.maps.Marker({position: location, map: map}));
+
   // const [zoom, setZoom] = useState(11);
+  var map;
 
   function myMap() {
     var mapCanvas = document.getElementById("mapsCanvas");
@@ -121,10 +55,13 @@ export function Usermap({getUserLocation, location, putLocation}) {
       center: {lat: 19.0587757, lng: 76.085601},
       zoom: 12
     };
-    var map = new google.maps.Map(mapCanvas, mapOptions);
+    map = new google.maps.Map(mapCanvas, mapOptions);
     var marker = new google.maps.Marker({position: location, map: map});
-    map.setCenter(location);
   }
+
+  useEffect(() => {
+    map.setCenter(location);
+  }, [location]);
 
   // const imgStyle = {
   //   height: '30px'
@@ -138,7 +75,7 @@ export function Usermap({getUserLocation, location, putLocation}) {
 
   return (
     <div>
-      <div id="mapsCanvas"  style={{ height: 'calc(100vh - 80px)', width: '100%' }}></div>
+      <div id="mapsCanvas" style={{ height: 'calc(100vh - 80px)', width: '100%' }}></div>
     </div>
   );
 }
