@@ -12,24 +12,11 @@ export const JWT_TOKEN_KEY = 'secretDecoderOfJWTLocalstorage';
 export const API = 'https://famcare-api.herokuapp.com'
 
 export const NAVIGATION_HEADER = {
-    '/projects': 'ERP',
     '/dashboard': 'DASHBOARD',
     '/mapp': 'Mapp',
   };
   
   export const NAVIGATION_BREADCRUMB = {
-    '/projects': {
-      name: ['Home'],
-      links: ['/projects'],
-    },
-    '/projects/add': {
-      name: ['Home', 'Add Project'],
-      links: ['/projects', '/projects/add'],
-    },
-    '/projects/assign': {
-      name: ['Home', 'Add Resource'],
-      links: ['/projects', 'projects/assign'],
-    },
     '/dashboard': {
       name: ['Employee Dashboard'],
       links: ['/dashboard'],
@@ -42,10 +29,5 @@ export const NAVIGATION_HEADER = {
   
   export const SIDE_DRAWER_LIST = [
     { name: 'Dashboard', link: '/dashboard', icon: <Dashboard /> },
-    {
-      name: 'ERP',
-      link: '/projects',
-      icon: <Assignment />,
-    },
     { name: 'Mapp', link: '/mapp', icon: <MapIcon /> },
   ];

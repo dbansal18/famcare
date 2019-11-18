@@ -32,6 +32,8 @@ import { getUserList, getGroupList, postGroup, inviteUser } from './actions';
 import './styles.scss';
 import Logo from './images/logo.png';
 
+import io from 'socket.io-client';
+
 export function Dashboard({ loading, userList, groupList, getUsers, getGroups, loggedUser, addNewGroup, inviteUserToGroup }) {
   useInjectReducer({ key: 'dashboard', reducer });
   useInjectSaga({ key: 'dashboard', saga });
@@ -39,18 +41,76 @@ export function Dashboard({ loading, userList, groupList, getUsers, getGroups, l
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
   const [userGroups, setUserGroups] = useState([]);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [locations, setLocations] = useState([]);
+
+  const socket = io('http://famcare-api.herokuapp.com');
+
+  const mapUser = (userLoc) => {
+    var tempLocations = locations;
+    const user = tempLocations.find(location => userLoc.username == location.username ? 
+      location.coords = userLoc.coords : '');
+    if(!user) tempLocations.push(userLoc);
+    console.log('ll', tempLocations);
+    
+    setLocations(tempLocations);
+  }
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((pos) => {
-      setLat(pos.coords.latitude);
-      setLon(pos.coords.longitude)
-      console.log('hhh', lat, lon)
+    socket.emit('join', { username: loggedUser.email, name: loggedUser.name }, (error, users) => {
+        if (error) {
+            alert(error)
+            // location.href = '/'
+        }
+        if(users) {
+          console.log('use', users);
+          setOnlineUsers(users);
+        }
+        
     })
+    socket.on('roomData', ({ users }) => {
+        console.log('remm', users)
+        setOnlineUsers(users)
+    })
+    // socket.on('userLocation', (message) => {
+    //   console.log('message', message);
+    //   mapUser(message);
+    // })
+
+    socket.on('userLocations', (message) => {
+      console.log('message', message);
+      setLocations(message);
+    })
+
+  }, [])
+
+  const fetchLocation = () => {
+    navigator.geolocation.watchPosition(
+      pos => {
+        // const location = {lat: pos.coords.latitude, lng: pos.coords.longitude};
+        // set(location);
+        setLat(pos.coords.latitude)
+        setLon(pos.coords.longitude)
+      }
+    )
+  }
+
+  useEffect(() => {
+    fetchLocation();
+    // navigator.geolocation.getCurrentPosition((pos) => {
+    //   setLat(pos.coords.latitude);
+    //   setLon(pos.coords.longitude);
+    //   console.log('hhh', lat, lon);
+    // })
     // return function cleanup() {
     //   setLat(null);
     //   setLon(null);
     // };
-  }, [lat, lon]);
+  }, []);
+
+  useEffect(() => {
+    socket.emit('sendLocation', {username: loggedUser.email, lat: lat, lon: lon, createdAt: Date.now()}, () => {})
+  }, [lat, lon])
 
   useEffect(() => {
     getGroups();
@@ -128,7 +188,7 @@ export function Dashboard({ loading, userList, groupList, getUsers, getGroups, l
                             addNewUser={inviteUserToGroup}
                           />) : ''
                       }
-                      title={<GroupInfo groupName={group.name} users={group.users} />}
+                      title={<GroupInfo groupName={group.name} users={group.users} onlineUsers={onlineUsers} locations={locations}/>}
                     />
                   </Card>
                 </div>

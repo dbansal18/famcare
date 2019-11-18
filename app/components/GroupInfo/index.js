@@ -21,6 +21,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
+import Badge from '@material-ui/core/Badge';
 import './styles.scss';
 
 const useStyles = makeStyles(theme => ({
@@ -37,7 +38,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function GroupInfo({groupName, users}) {
+function GroupInfo({groupName, users, onlineUsers, locations}) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -48,6 +49,12 @@ function GroupInfo({groupName, users}) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const isOnline = (user) => {
+    var uu = onlineUsers.find(u => u.username == user)
+    if(uu) return true;
+    else return false
+  }
 
   return (
     <div>
@@ -61,7 +68,7 @@ function GroupInfo({groupName, users}) {
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              Users
+              {groupName}
             </Typography>
             {/* <Button color="inherit" onClick={handleClose}>
               save
@@ -72,6 +79,7 @@ function GroupInfo({groupName, users}) {
           {users.map(user => (
             <div key={user.id}>
               <ListItem button>
+                { isOnline(user.email) ? (<Badge color="secondary" variant="dot" />) : ''}
                 <ListItemText primary={user.name} secondary={user.email} />
               </ListItem>
               <Divider />
@@ -86,6 +94,8 @@ function GroupInfo({groupName, users}) {
 GroupInfo.propTypes = {
   groupName: PropTypes.string,
   users: PropTypes.array,
+  onlineUsers: PropTypes.array,
+  locations: PropTypes.array,
 };
 
 export default memo(GroupInfo);
