@@ -44,7 +44,7 @@ export function Dashboard({ loading, userList, groupList, getUsers, getGroups, l
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [locations, setLocations] = useState([]);
 
-  const socket = io('http://famcare-api.herokuapp.com');
+  const socket = io('https://famcare-api.herokuapp.com');
 
   const mapUser = (userLoc) => {
     var tempLocations = locations;
