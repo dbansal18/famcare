@@ -56,6 +56,15 @@ function GroupInfo({groupName, users, onlineUsers, locations}) {
     else return false
   }
 
+  const showCoordinates = (user) => {
+    const userLocation = locations.find(u => u.username == user)
+    return userLocation;
+  }
+
+  const showLocation = (coordinates) => coordinates ? (
+    <p>Lat {coordinates.coords.lat}   Lon  {coordinates.coords.lon}</p>
+  ) : ''
+
   return (
     <div>
       <Button variant="outlined" color="primary" onClick={handleClickOpen} className="group-name">
@@ -81,6 +90,7 @@ function GroupInfo({groupName, users, onlineUsers, locations}) {
               <ListItem button>
                 { isOnline(user.email) ? (<Badge color="secondary" variant="dot" />) : ''}
                 <ListItemText primary={user.name} secondary={user.email} />
+                { showLocation(showCoordinates(user.email)) }
               </ListItem>
               <Divider />
             </div>

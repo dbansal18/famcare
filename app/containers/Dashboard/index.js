@@ -153,13 +153,13 @@ export function Dashboard({ loading, userList, groupList, getUsers, getGroups, l
                 <img className="logo-img" src={Logo} alt="JMITLogo" />
               </div>
             </h1> */}
-            <h2>Add New Group {groupList.length}  {userGroups.length}
+            <h2>Add New Group
               <NewGroup
                 groupsList={groupList}
                 addNewGroup={addNewGroup}
               />
             </h2>
-            <Link
+            {/* <Link
               to={{
                 pathname: '/mapp',
               }}
@@ -168,7 +168,7 @@ export function Dashboard({ loading, userList, groupList, getUsers, getGroups, l
             </Link>
             {
               ("geolocation" in navigator) ? 'hii' : 'nonnn'
-            }
+            } */}
             <div>{lat}</div>
             <div>{lon}</div>
             {userGroups && userGroups.map(group => 
