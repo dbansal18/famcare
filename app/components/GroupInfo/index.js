@@ -22,6 +22,7 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import Badge from '@material-ui/core/Badge';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import './styles.scss';
 
 const useStyles = makeStyles(theme => ({
@@ -41,6 +42,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 function GroupInfo({groupName, users, onlineUsers, locations}) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const [mapOpen, setMapOpen] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -61,8 +63,24 @@ function GroupInfo({groupName, users, onlineUsers, locations}) {
     return userLocation;
   }
 
+  const mapClose = () => setMapOpen(false);
+  const openMap = () => setMapOpen(true);
+
+  const mapUrl = (coordinates) => "https://google.com/maps?q="+coordinates.coords.lat+","+coordinates.coords.lon+"&t=&z=13&ie=UTF8&iwloc=&output=embed";
+
+  const mapPopup = (coordinates) => (
+    <Dialog onClose={mapClose} aria-labelledby="simple-dialog-title" open={mapOpen}>
+      <DialogTitle id="simple-dialog-title">Location</DialogTitle>
+      <iframe width="400" height="400" id="gmap_canvas" src={mapUrl(coordinates)} frameBorder="0" scrolling="no" marginHeight="0" marginWidth="0"></iframe>
+    </Dialog>
+  )
+
   const showLocation = (coordinates) => coordinates ? (
-    <p>Lat {coordinates.coords.lat}   Lon  {coordinates.coords.lon}</p>
+    <p>
+      Lat {coordinates.coords.lat}   Lon  {coordinates.coords.lon}
+      <a onClick={openMap}>View</a>
+      {mapPopup(coordinates)}
+    </p>
   ) : ''
 
   return (
