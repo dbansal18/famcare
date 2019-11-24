@@ -18,7 +18,7 @@ export const NAVIGATION_HEADER = {
   
   export const NAVIGATION_BREADCRUMB = {
     '/dashboard': {
-      name: ['Employee Dashboard'],
+      name: ['Dashboard'],
       links: ['/dashboard'],
     },
     '/mapp': {
