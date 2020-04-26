@@ -8,8 +8,12 @@ import {
   GET_GROUP_LIST,
   POST_GROUP,
   INVITE_USER, 
+  LEAVE_GROUP,
+  KICK_USER
 } from './constants';
-import { getUserListSuccess, getGroupError, getGroupSuccess, postGroupError, inviteUserSuccess, inviteUserError } from './actions';
+import { getUserListSuccess, getGroupError, getGroupSuccess, postGroupError,
+  inviteUserSuccess, inviteUserError, leaveGroupSuccess, leaveGroupError, kickUserSuccess, kickUserError
+} from './actions';
 
 function *getUserList() {
   const reqUrl = `${API}/user`;
@@ -81,6 +85,46 @@ function *inviteUser(action) {
   }
 }
 
+function *leaveFromGroup(action) {
+  const user = yield select(makeSelectUser());
+  const reqUrl = `${API}/group/leave`;
+  const headers = {
+    method: 'POST',
+    headers: {
+      Authorization: user.authCode,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ group: action.group }),
+  };
+  try {
+    const groupList = yield call(request, reqUrl, headers);
+    yield call(getGroupList);
+  } catch (error) {
+    console.log('err', error);
+    yield put(leaveGroupError(error));
+  }
+}
+
+function *removeUser(action) {
+  const user = yield select(makeSelectUser());
+  const reqUrl = `${API}/group/remove`;
+  const headers = {
+    method: 'POST',
+    headers: {
+      Authorization: user.authCode,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ group: action.kick.group, email: action.kick.email }),
+  };
+  try {
+    const groupList = yield call(request, reqUrl, headers);
+    yield call(getGroupList);
+  } catch (error) {
+    console.log('err', error);
+    yield put(kickUserError(error));
+  }
+}
+
 // Individual exports for testing
 export default function* dashboardSaga() {
   // See example in containers/HomePage/saga.js
@@ -88,4 +132,6 @@ export default function* dashboardSaga() {
   yield takeLatest(GET_GROUP_LIST, getGroupList);
   yield takeLatest(POST_GROUP, postGroup);
   yield takeLatest(INVITE_USER, inviteUser);
+  yield takeLatest(LEAVE_GROUP, leaveFromGroup);
+  yield takeLatest(KICK_USER, removeUser);
 }

@@ -12,6 +12,7 @@ import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import { Link } from 'react-router-dom';
 import { LinearProgress, Card, CardHeader, Avatar, IconButton } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import NewGroup from 'components/NewGroup/Loadable';
@@ -27,14 +28,14 @@ import {
 } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
-import { getUserList, getGroupList, postGroup, inviteUser } from './actions';
+import { getUserList, getGroupList, postGroup, inviteUser, leaveGroup, kickUser } from './actions';
 
 import './styles.scss';
 import Logo from './images/logo.png';
 
 import io from 'socket.io-client';
 
-export function Dashboard({ loading, userList, groupList, getUsers, getGroups, loggedUser, addNewGroup, inviteUserToGroup }) {
+export function Dashboard({ loading, userList, groupList, getUsers, getGroups, loggedUser, addNewGroup, inviteUserToGroup, leaveGroup, kickUser }) {
   useInjectReducer({ key: 'dashboard', reducer });
   useInjectSaga({ key: 'dashboard', saga });
 
@@ -89,6 +90,7 @@ export function Dashboard({ loading, userList, groupList, getUsers, getGroups, l
       pos => {
         // const location = {lat: pos.coords.latitude, lng: pos.coords.longitude};
         // set(location);
+        socket.emit('sendLocation', {username: loggedUser.email, lat: pos.coords.latitude, lon: pos.coords.longitude, createdAt: Date.now()}, () => {})
         setLat(pos.coords.latitude)
         setLon(pos.coords.longitude)
       }
@@ -106,11 +108,12 @@ export function Dashboard({ loading, userList, groupList, getUsers, getGroups, l
     //   setLat(null);
     //   setLon(null);
     // };
+    // emitUserLocation();
   }, []);
 
-  useEffect(() => {
-    socket.emit('sendLocation', {username: loggedUser.email, lat: lat, lon: lon, createdAt: Date.now()}, () => {})
-  }, [lat, lon])
+  // useEffect(() => {
+  //   socket.emit('sendLocation', {username: loggedUser.email, lat: lat, lon: lon, createdAt: Date.now()}, () => {})
+  // }, [lat, lon])
 
   useEffect(() => {
     getGroups();
@@ -136,6 +139,10 @@ export function Dashboard({ loading, userList, groupList, getUsers, getGroups, l
       if(!groupUsers.find(res => (res.id === user._id))) return user;
     });
     return tempUsers;
+  }
+
+  const emitUserLocation = () => {
+    socket.emit('sendLocation', {username: loggedUser.email, lat: lat, lon: lon, createdAt: Date.now()}, () => {})
   }
 
   return (
@@ -171,6 +178,12 @@ export function Dashboard({ loading, userList, groupList, getUsers, getGroups, l
             } */}
             <div>{lat}</div>
             <div>{lon}</div>
+            {/* <div className="lat-lon"> 
+              <TextField id="lat" label="Latitude" variant="outlined" value={lat} disabled={true} onChange={() => emitUserLocation()}/>
+            </div>
+            <div className="lat-lon">
+              <TextField id="lon" label="Longitude" variant="outlined" value={lon} disabled={true} onChange={() => emitUserLocation()}/>
+            </div> */}
             {userGroups && userGroups.map(group => 
               (
                 <div key={group._id} className="groupcard">
@@ -188,7 +201,7 @@ export function Dashboard({ loading, userList, groupList, getUsers, getGroups, l
                             addNewUser={inviteUserToGroup}
                           />) : ''
                       }
-                      title={<GroupInfo groupName={group.name} users={group.users} onlineUsers={onlineUsers} locations={locations}/>}
+                      title={<GroupInfo groupName={group.name} users={group.users} onlineUsers={onlineUsers} locations={locations} groupId={group._id} leaveGroup={leaveGroup} isAdmin={group.admin === loggedUser._id} kickUser={kickUser}/>}
                     />
                   </Card>
                 </div>
@@ -210,6 +223,8 @@ Dashboard.propTypes = {
   loggedUser: PropTypes.object,
   addNewGroup: PropTypes.func,
   inviteUserToGroup: PropTypes.func,
+  leaveGroup: PropTypes.func,
+  kickUser: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -226,6 +241,8 @@ function mapDispatchToProps(dispatch) {
     getGroups: () => dispatch(getGroupList()),
     addNewGroup: group => dispatch(postGroup(group)),
     inviteUserToGroup: invite => dispatch(inviteUser(invite)),
+    leaveGroup: group => dispatch(leaveGroup(group)),
+    kickUser: kick => dispatch(kickUser(kick)),
   };
 }
 

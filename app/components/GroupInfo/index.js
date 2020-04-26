@@ -13,10 +13,12 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
@@ -39,7 +41,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function GroupInfo({groupName, users, onlineUsers, locations}) {
+function GroupInfo({groupName, users, onlineUsers, locations, groupId, leaveGroup, isAdmin, kickUser}) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [mapOpen, setMapOpen] = React.useState(false);
@@ -97,9 +99,9 @@ function GroupInfo({groupName, users, onlineUsers, locations}) {
             <Typography variant="h6" className={classes.title}>
               {groupName}
             </Typography>
-            {/* <Button color="inherit" onClick={handleClose}>
-              save
-            </Button> */}
+            <Button color="inherit" onClick={() => leaveGroup(groupId)}>
+              Leave
+            </Button>
           </Toolbar>
         </AppBar>
         <List>
@@ -109,6 +111,13 @@ function GroupInfo({groupName, users, onlineUsers, locations}) {
                 { isOnline(user.email) ? (<Badge color="secondary" variant="dot" />) : ''}
                 <ListItemText primary={user.name} secondary={user.email} />
                 { showLocation(showCoordinates(user.email)) }
+                {isAdmin && !user.isAdmin  ? (
+                  <ListItemSecondaryAction>
+                    <IconButton edge="end" aria-label="remove">
+                      <RemoveCircleOutlineIcon onClick={() => kickUser({group: groupId, email: user.email})}/>
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                ) : null}
               </ListItem>
               <Divider />
             </div>
@@ -124,6 +133,10 @@ GroupInfo.propTypes = {
   users: PropTypes.array,
   onlineUsers: PropTypes.array,
   locations: PropTypes.array,
+  groupId: PropTypes.string,
+  leaveGroup: PropTypes.func,
+  isAdmin: PropTypes.bool,
+  kickUser: PropTypes.func,
 };
 
 export default memo(GroupInfo);
