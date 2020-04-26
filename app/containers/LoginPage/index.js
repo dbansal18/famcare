@@ -38,7 +38,7 @@ export function LoginPage({ authCode, responseGoogle, onReceivingAuthCode }) {
       <div className="login-center">
         <div className="login-box">
           <div className="logo-center">
-            <img className="logo-img" src={Logo} alt="AFourLogo" />
+            <img className="logo-img" src={Logo} alt="Famcare-Logo" />
           </div>
           <h1 className="title">Famcare</h1>
           <p className="tagline">
@@ -74,7 +74,7 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     responseGoogle: response => {
-      dispatch(getAuthCode(response.Zi.id_token));
+      dispatch(getAuthCode(response.tokenObj.id_token));
     },
     onReceivingAuthCode: authCode => {
       dispatch(getUserData(authCode));
