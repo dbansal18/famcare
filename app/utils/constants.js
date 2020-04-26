@@ -13,7 +13,7 @@ export const API = 'https://famcare-api.herokuapp.com'
 
 export const NAVIGATION_HEADER = {
     '/dashboard': 'DASHBOARD',
-    '/mapp': 'Mapp',
+    // '/mapp': 'Mapp',
   };
   
   export const NAVIGATION_BREADCRUMB = {
@@ -21,13 +21,13 @@ export const NAVIGATION_HEADER = {
       name: ['Dashboard'],
       links: ['/dashboard'],
     },
-    '/mapp': {
-      name: ['Home'],
-      links: ['/mapp'],
-    },
+    // '/mapp': {
+    //   name: ['Home'],
+    //   links: ['/mapp'],
+    // },
   };
   
   export const SIDE_DRAWER_LIST = [
     { name: 'Dashboard', link: '/dashboard', icon: <Dashboard /> },
-    { name: 'Mapp', link: '/mapp', icon: <MapIcon /> },
+    // { name: 'Mapp', link: '/mapp', icon: <MapIcon /> },
   ];

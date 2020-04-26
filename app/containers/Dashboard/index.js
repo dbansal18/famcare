@@ -60,7 +60,7 @@ export function Dashboard({ loading, userList, groupList, getUsers, getGroups, l
   useEffect(() => {
     socket.emit('join', { username: loggedUser.email, name: loggedUser.name }, (error, users) => {
         if (error) {
-            alert(error)
+            alert(error+ ' \nPlease logout and then login')
             // location.href = '/'
         }
         if(users) {
